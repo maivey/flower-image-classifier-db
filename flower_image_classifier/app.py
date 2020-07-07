@@ -42,7 +42,7 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import tensorflow_datasets as tfds
 
-from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
+# from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 
 
 
