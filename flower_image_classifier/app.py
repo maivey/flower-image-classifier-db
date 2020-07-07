@@ -286,10 +286,7 @@ def upload_file():
                     # print("Id = ", row[0], )
                     # print("Image = ", row[1])
 
-                # try:
-                #     Image.open(filename)
-                # except:
-                #     print('hello')
+                
                 probs, classes = prediction(test_image, 'my_model2', top_k)
                 # probs, classes = prediction(file_path, 'my_model2', top_k)
 
@@ -329,17 +326,6 @@ def upload_file():
                                             filename=filename,
                                             top_k = top_k)
 
-                # return flask.render_template('index.html', 
-                #                             probs = probs,
-                #                             classes=classes,
-                #                             labelNames=label_names,
-                #                             # temp=temp,
-                #                             topFlowerName = top_flower_name,
-                #                             topProb = top_prob,
-                #                     filename=filename,
-                #                         top_k = top_k,
-                #                         myURL = my_file_path,
-                #                             temp=temp)
 
 def SaveFileToPG(id_image, fileData):
     insert_stmt = (
@@ -348,95 +334,9 @@ def SaveFileToPG(id_image, fileData):
         )
     data = (id_image, fileData)
     db_cursor.execute(insert_stmt, data)
-    # s = ""
-    # s += "INSERT INTO tbl_files_images"
-    # s += "("
-    # s += "id_image"
-    # s += ", blob_image_data"
-    # s += ") VALUES ("
-    # # s += "(%id_image)"
-    # # s += ", '(%fileData)'"
-    # # s += "("
-    # s += "('"
-    # s += str(id_image)
-    # # s+=")"
-    # s+="')"
-    # s += ", '("
-    # s += fileData
-    # s+=")'"
-    # s += ")"
-    # # --------------
-    # # Error trapping
-    # # --------------
-    # try: 
-    #     db_cursor.execute(s, [id_image, fileData])
-    # except psycopg2.Error as e:
-    #     print("error!")
-                # return redirect(url_for('uploaded_file',
-                #                     filename=filename,
-                #                     top_k = top_k))
-            #     print(top_k)
-            #     top_k = int(top_k)
-            #     file_path = url_for('uploaded_file',filename=filename)
-            #     # probs, classes = prediction(filename, 'my_model2', top_k)
-                # probs, classes = prediction(my_file_path, 'my_model2', top_k)
-                
-            # # Print the probabilities and class numbers to the console
-            #     print(f'Proabilities: {probs}')
-            #     print(probs[0])
-            #     print(f'Label Numbers: {classes}')
 
-
-            #     # Call the get_label_names function with the JSON file with class names and the classes returned from prediction
-            #     label_names = get_label_names('label_map.json', classes)
-            #     # Print the class names to the console
-            #     print(f'Label Names: {label_names}')
-            #     print(probs[0])
-            #     print(classes[0])
-            #     print(label_names[0])
-            #     top_flower_name = label_names[0].title()
-            #     top_prob = round(probs[0]*100,2)
-                
-            #     if top_k == 1:
-            #         return flask.render_template('index.html', 
-            #                                 probs = probs,
-            #                                 classes=classes,
-            #                                 labelNames=label_names,
-            #                                 topFlowerName = top_flower_name,
-            #                                 onlyOneK = True,
-            #                                 topProb = top_prob)
-            #     else:
-            #         temp = 'temp'
-            #         return flask.render_template('index.html', 
-            #                                 probs = probs,
-            #                                 classes=classes,
-            #                                 labelNames=label_names,
-            #                                 temp=temp,
-            #                                 topFlowerName = top_flower_name,
-            #                                 topProb = top_prob,
-            #                                 filename=filename,
-            #                                 top_k = top_k)
             
 
-    # return flask.render_template('index.html')
-    # '''
-    # <!doctype html>
-    # <title>Upload new File</title>
-    # <h1>Upload new File</h1>
-    # <form method=post enctype=multipart/form-data>
-    #   <input type=file name=file>
-    #   <input type=submit value=Upload>
-    # </form>
-    # '''
-# from flask import send_from_directory
-# model_folder = os.path.join(app.root_path)
-# @app.route('/my_model')
-# def uploaded_model():
-#     return send_from_directory(model_folder,'1587680462.h5')
-# @app.route('/uploads/<filename>')
-# def uploaded_file_2(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                                filename)
 
 # @app.route('/uploads/<filename>/<top_k>')
 @app.route('/tmp/uploads/<filename>')
@@ -444,105 +344,17 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
-@app.route('/test/<filename>')
-def test(filename):
-    myIMG = url_for('uploaded_file',filename=filename)
-    temp='temp'
-    return flask.render_template('index.html',
-                                    filename=filename,
-                                        myURL = myIMG,
-                                            temp=temp)
-
-# from werkzeug.middleware.shared_data import SharedDataMiddleware
-# app.add_url_rule('/uploads/<filename>', 'uploaded_file',
-#                  build_only=True)
-# app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-#     '/uploads':  app.config['UPLOAD_FOLDER']
-# })
-# from werkzeug.wsgi import SharedDataMiddleware
-# app.add_url_rule('/uploads/<filename>', 'uploaded_file',
-#                  build_only=True)
-# app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-#     '/uploads':  app.config['UPLOAD_FOLDER']
-# })
-#     print(top_k)
-#     top_k = int(top_k)
-#     # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#     file_path = url_for('uploaded_file_2',filename=filename)
-#     # probs, classes = prediction(filename, 'my_model2', top_k)
-#     probs, classes = prediction(file_path, 'my_model2', top_k)
-    
-# # Print the probabilities and class numbers to the console
-#     print(f'Proabilities: {probs}')
-#     print(probs[0])
-#     print(f'Label Numbers: {classes}')
-
-
-#     # Call the get_label_names function with the JSON file with class names and the classes returned from prediction
-#     label_names = get_label_names('label_map.json', classes)
-#     # Print the class names to the console
-#     print(f'Label Names: {label_names}')
-#     print(probs[0])
-#     print(classes[0])
-#     print(label_names[0])
-#     top_flower_name = label_names[0].title()
-#     top_prob = round(probs[0]*100,2)
-    
-#     if top_k == 1:
-#         return flask.render_template('index.html', 
-#                                 probs = probs,
-#                                 classes=classes,
-#                                 labelNames=label_names,
-#                                 topFlowerName = top_flower_name,
-#                                 onlyOneK = True,
-#                                 topProb = top_prob)
-#     else:
-#         temp = 'temp'
-#         return flask.render_template('index.html', 
-#                                 probs = probs,
-#                                 classes=classes,
-#                                 labelNames=label_names,
-#                                 temp=temp,
-#                                 topFlowerName = top_flower_name,
-#                                 topProb = top_prob)
-
-
-    # return send_from_directory(app.config['UPLOAD_FOLDER'],
-    #                            filename)
-# if request.method =='GET':
-#         top_k = int(top_k)
-#         probs, classes = prediction(filename, 'my_model2', top_k)
-#     # Print the probabilities and class numbers to the console
-#         print(f'Proabilities: {probs}')
-#         print(f'Label Numbers: {classes}')
-
-
-#         # Call the get_label_names function with the JSON file with class names and the classes returned from prediction
-#         label_names = get_label_names('label_map.json', classes)
-#         # Print the class names to the console
-#         print(f'Label Names: {label_names}')
-#         return flask.render_template('index.html', 
-#                                 probs = probs,
-#                                 classes=classes,
-#                                 labelNames=label_names)
-#     if request.method =='POST':
-#         # check if the post request has the file part
-#         if 'file' not in request.files:
-#             flash('No file part')
-#             return redirect(request.url)
-#         file = request.files['file']
-#         # if user does not select file, browser also
-#         # submit an empty part without filename
-#         if file.filename == '':
-#             flash('No selected file')
-#             return redirect(request.url)
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#             top_k = str(request.form['month_day'])
-#             print(top_k)
-#             return redirect(url_for('uploaded_file',
+# @app.route('/test/<filename>')
+# def test(filename):
+#     myIMG = url_for('uploaded_file',filename=filename)
+#     temp='temp'
+#     return flask.render_template('index.html',
 #                                     filename=filename,
-#                                     top_k = top_k))
+#                                         myURL = myIMG,
+#                                             temp=temp)
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True) 
