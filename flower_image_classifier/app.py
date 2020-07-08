@@ -39,8 +39,8 @@ import os
 
 # Tensorflow imports
 import tensorflow as tf
-import tensorflow_hub as hub
-import tensorflow_datasets as tfds
+# import tensorflow_hub as hub
+# import tensorflow_datasets as tfds
 
 # from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 
@@ -94,9 +94,9 @@ def prediction(image_path,model,top_k):
     # x = load_img(image_path, target_size=(224,224))
     # x = img_to_array(x)
     # x /= 255
-    # processed_test_image = np.expand_dims(image_path, axis=0)
+    processed_test_image = np.expand_dims(image_path, axis=0)
 
-    processed_test_image = process_image(image_path)
+    # processed_test_image = process_image(image_path)
 
     #The image returned by the process_image function is a NumPy array with shape (224, 224, 3) but the model expects the input images to be of shape (1, 224, 224, 3). This extra dimension represents the batch size.
     # Use  np.expand_dims() function to add the extra dimension.
@@ -158,7 +158,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2 
-from databaseconfig import user_name, password, local_host
+# import databaseconfig
+from .databaseconfig import user_name, password, local_host
 # ---------------------
 # PostgreSQL connection
 # ---------------------
@@ -180,11 +181,11 @@ db_cursor = data_conn.cursor()
     #     return render_template("index.html", temp = t_msg_err)
 
 # database_url = f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(database_url, '')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
 # Remove tracking modifications
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 # class ImageDB(db.Model):
 #     __tablename__ = 'tbl_files_images'
@@ -274,12 +275,17 @@ def upload_file():
                     myImage = row[1]
                 # img_array = np.reshape(np.frombuffer(myImage, dtype="float32"), (224, 224))
                 # print(img_array)
+                print(myImage)
+                # BytesIO(myImage)
                 new_bin_data = bytes(myImage)
                 print(new_bin_data)
+                print(bytearray(myImage))
                 im = Image.open(new_bin_data)
+
+                # im = Image.open(BytesIO(myImage))
                 test_image = np.asarray(im)
                 print(test_image)
-                # x = load_img(myImage, target_size=(224,224))
+                # x = load_img(new_bin_data, target_size=(224,224))
                 # x = img_to_array(x)
                 # x /= 255
                 # processed_test_image = np.expand_dims(x, axis=0)
@@ -288,6 +294,8 @@ def upload_file():
 
                 
                 probs, classes = prediction(test_image, 'my_model2', top_k)
+                # probs, classes = prediction(processed_test_image, 'my_model2', top_k)
+
                 # probs, classes = prediction(file_path, 'my_model2', top_k)
 
                 # # # # Print the probabilities and class numbers to the console
@@ -303,6 +311,10 @@ def upload_file():
                 print(label_names[0])
                 top_flower_name = label_names[0].title()
                 top_prob = round(probs[0]*100,2)
+
+                postgreSQL_select_Query = "delete from tbl_files_images where id_image = %s"
+                db_cursor.execute(postgreSQL_select_Query, (id_image,))
+
                 # myImage = ImageDB(image_id=1, blob_image_data=file)
                 # db.session.add(myImage)
                 # db.session.commit()
