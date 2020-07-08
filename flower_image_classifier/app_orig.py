@@ -41,7 +41,7 @@ import os
 import tensorflow as tf
 # import tensorflow_hub as hub
 # import tensorflow_datasets as tfds
-from .databaseconfig import user_name, password, local_host
+
 # from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 
 
@@ -155,43 +155,40 @@ ALLOWED_EXTENSIONS = {'jpg','jpeg'}
 
 app = Flask(__name__)
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# t_host =  f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
-from flask_sqlalchemy import SQLAlchemy
-t_host =  f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
-app.config['SQLALCHEMY_DATABASE_URI'] =t_host 
+from flask_sqlalchemy import SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
 # # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
-class ImageDB(db.Model):
-    __tablename__ = 'tbl_files_images'
+# class ImageDB(db.Model):
+#     __tablename__ = 'tbl_files_images'
 
-    id_image = db.Column(db.Integer, primary_key=True)
-    blob_image_data = db.Column(db.LargeBinary)
+#     image_id = db.Column(db.Integer, primary_key=True)
+#     blob_image_data = db.Column(db.LargeBinary)
 
-    def __repr__(self):
-        return '<ImageDB %r>' % (self.name)
+#     def __repr__(self):
+#         return '<ImageDB %r>' % (self.name)
 
         
 import psycopg2 
 # import databaseconfig
-# from .databaseconfig import user_name, password, local_host
+from .databaseconfig import user_name, password, local_host
 # ---------------------
 # PostgreSQL connection
 # ---------------------
 # t_host =  f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
-# t_host = local_host
-# t_port = '5432'
-# t_dbname = "flower-image-db"
-# t_name_user = user_name
-# t_password = password
-# data_conn = psycopg2.connect(host=t_host, port=t_port, dbname=t_dbname, user=t_name_user, password=t_password)
-# # data_conn = psycopg2.connect(dbname=t_dbname, user=t_name_user, password=t_password)
+t_host = local_host
+t_port = '5432'
+t_dbname = "flower-image-db"
+t_name_user = user_name
+t_password = password
+data_conn = psycopg2.connect(host=t_host, port=t_port, dbname=t_dbname, user=t_name_user, password=t_password)
+# data_conn = psycopg2.connect(dbname=t_dbname, user=t_name_user, password=t_password)
 
-# db_cursor = data_conn.cursor()
+db_cursor = data_conn.cursor()
 
     # try:
     #     db_cursor.execute(s, [id_image, fileData])
@@ -254,35 +251,21 @@ def upload_file():
                                     noFile = True)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # print(my_file.tobytes())
-            id_image = 23
-            db.session.query(ImageDB).filter(ImageDB.id_image==23).delete()
-            db.session.commit()
-            # im = Image.open(bytearray(filename, 'utf8'))
-            pet = ImageDB(id_image=id_image, blob_image_data=my_file)
-            db.session.add(pet)
-            db.session.commit()
-
-            im = Image.open(BytesIO(my_file))
-
-            test_image = np.asarray(im)
-
-            # with open(filename, "rb") as imgFile:
-            #     src = imgFile.read()
-
-            # # SaveFileToPG(id_image, filename)
-            # insert_stmt = (
-            #     "INSERT INTO tbl_files_images (id_image, blob_image_data) "
-            #     "VALUES (%s, %s)"
-            #     )
-            # data = (id_image, filename)
-            # db_cursor.execute(insert_stmt, data)
-            # # postgreSQL_select_Query = "select * from tbl_files_images where id_image = %s"
-            # # db_cursor.execute(postgreSQL_select_Query, (id_image,))
-            # # records = db_cursor.fetchall()
-            # # for row in records:
-            # #     print("Id = ", row[0], )
-            # #     print("Image = ", row[1])
+            print(filename)
+            id_image = 3
+            # SaveFileToPG(id_image, filename)
+            insert_stmt = (
+                "INSERT INTO tbl_files_images (id_image, blob_image_data) "
+                "VALUES (%s, %s)"
+                )
+            data = (id_image, filename)
+            db_cursor.execute(insert_stmt, data)
+            # postgreSQL_select_Query = "select * from tbl_files_images where id_image = %s"
+            # db_cursor.execute(postgreSQL_select_Query, (id_image,))
+            # records = db_cursor.fetchall()
+            # for row in records:
+            #     print("Id = ", row[0], )
+            #     print("Image = ", row[1])
                 
 
             print(filename)
@@ -308,18 +291,15 @@ def upload_file():
 
                 top_k = int(top_k)
                 # my_file_path = str(request.url_root)+ (str(my_file_path_ext)[1:])
-                
-                # postgreSQL_select_Query = "select * from tbl_files_images where id_image = %s"
-                # db_cursor.execute(postgreSQL_select_Query, (id_image,))
-                # records = db_cursor.fetchall()
-                # for row in records:
-                #     myID = row[0]
-                #     myImage = row[1]
-                # # img_array = np.reshape(np.frombuffer(myImage, dtype="float32"), (224, 224))
-                # # print(img_array)
-                my_results = db.session.query(ImageDB.blob_image_data).filter(ImageDB.id_image == id_image).first()
-                print(type(my_results))
-                # print(myImage)
+                postgreSQL_select_Query = "select * from tbl_files_images where id_image = %s"
+                db_cursor.execute(postgreSQL_select_Query, (id_image,))
+                records = db_cursor.fetchall()
+                for row in records:
+                    myID = row[0]
+                    myImage = row[1]
+                # img_array = np.reshape(np.frombuffer(myImage, dtype="float32"), (224, 224))
+                # print(img_array)
+                print(myImage)
                 # BytesIO(myImage)
                 # new_bin_data = bytes(myImage)
                 # print(new_bin_data)
@@ -327,18 +307,10 @@ def upload_file():
                 # print(myImage.tobytes())
                 # im = Image.open(myImage.tobytes())
 
-                # im = Image.open(BytesIO(my_results))
-                # im = Image.open(my_results)
-
+                # im = Image.open(BytesIO(myImage))
                 # test_image = np.asarray(im)
-                # db.session.query(ImageDB).filter(ImageDB.id_image==23).delete()
-                # db.session.commit()
-                # test_image = np.asarray(Image.open(myImage.tobytes()))
-
-                # im = Image.open(bytes(results))
-                # test_image = np.asarray(im)
-                # print(test_image)
-
+                test_image = np.asarray(Image.open(myImage.tobytes()))
+                print(test_image)
                 # x = load_img(new_bin_data, target_size=(224,224))
                 # x = img_to_array(x)
                 # x /= 255
@@ -346,8 +318,7 @@ def upload_file():
                     # print("Id = ", row[0], )
                     # print("Image = ", row[1])
 
-                # probs, classes = prediction(results, 'my_model2', top_k)
-
+                
                 probs, classes = prediction(test_image, 'my_model2', top_k)
                 # probs, classes = prediction(processed_test_image, 'my_model2', top_k)
 
