@@ -56,6 +56,7 @@ for (var i=0; i<test_probs.length; i++) {
     }
 }
 var myProbs = myProbs.map(d => +(d*100).toFixed(2))
+console.log(myProbs)
 // var myProbsNums = myProbs.map(d=> +d)
 // myProbsNums.map(d => (d*100).toFixed(2))
 var tbody = d3.select("tbody");
