@@ -45,15 +45,18 @@ var test_probs = probs.split(" ");
 var myProbs = [];
 var temp = [];
 for (var i=0; i<test_probs.length; i++) {
-    if (i===0) {
-        myProbs.push(test_probs[0].slice(1,))
-    }
-    else if (i===test_probs.length-1) {
-        myProbs.push(test_probs[test_probs.length-1].slice(0,(test_probs[test_probs.length-1].length)-1))
-    }
-    else {
-        myProbs.push(test_probs[i])
-    }
+    if (test_probs[i] !=="") {
+
+        if (i===0) {
+            myProbs.push(test_probs[0].slice(1,))
+        }
+        else if (i===test_probs.length-1) {
+            myProbs.push(test_probs[test_probs.length-1].slice(0,(test_probs[test_probs.length-1].length)-1))
+        }
+        else {
+            myProbs.push(test_probs[i])
+        }
+     }
 }
 var myProbs = myProbs.map(d => +(d*100).toFixed(2))
 console.log(myProbs)
