@@ -63,7 +63,7 @@ console.log(myProbs)
 // var myProbsNums = myProbs.map(d=> +d)
 // myProbsNums.map(d => (d*100).toFixed(2))
 var tbody = d3.select("tbody");
-for (var i = 0; i<myProbs.length; i++) {
+for (var i = 0; i<names.length; i++) {
     var row = tbody.append("tr");
     var cell = row.append("td");
     cell.text(names[i]);
