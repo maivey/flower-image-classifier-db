@@ -8,14 +8,10 @@ from flask import redirect
 from flask import flash
 import os.path
 
-# import pandas as pd
-# import time
-# import pandas as pd
-# import numpy as np
+
 import datetime
 import json
 
-import numpy as np
 
 from PIL import Image
 import requests
@@ -30,7 +26,6 @@ import os
 # Tensorflow imports
 import tensorflow as tf
 
-from .databaseconfig import user_name, password, local_host
 
 
 
@@ -105,26 +100,6 @@ ALLOWED_EXTENSIONS = {'jpg','jpeg'}
 
 
 app = Flask(__name__)
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# t_host =  f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
-# from flask_sqlalchemy import SQLAlchemy
-# t_host =  f'postgresql://{user_name}:{password}@{local_host}/flower-image-db'
-
-# # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
-# app.config['SQLALCHEMY_DATABASE_URI'] =t_host 
-# # # Remove tracking modifications
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# # 
-# db = SQLAlchemy(app)
-
-# class ImageDB(db.Model):
-#     __tablename__ = 'tbl_files_images'
-
-#     id_image = db.Column(db.Integer, primary_key=True)
-#     blob_image_data = db.Column(db.LargeBinary)
-
-#     def __repr__(self):
-#         return '<ImageDB %r>' % (self.name)
 
         
 import psycopg2 
