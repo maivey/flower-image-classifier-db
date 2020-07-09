@@ -277,7 +277,8 @@
     }
   
     to {
-      font-size : 5rem;
+      font-size: 7vw;
+      /*font-size : 5rem;*/
       /* font-size : 4.5rem; */
       /* font-size: 16.5rem; */
       /* font-size: 0.5rem; */
@@ -291,7 +292,8 @@
     }
   
     to {
-      font-size : 16.5rem;
+      font-size: 7vw;
+      /*font-size : 16.5rem;*/
       /* font-size : 4.5rem; */
       /* font-size: 16.5rem; */
       /* font-size: 0.5rem; */
